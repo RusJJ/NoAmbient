@@ -35,15 +35,15 @@ namespace NoAmbientMod
                     }
                 }
 
-                if(NoAmbient.forest_ambient == null || NoAmbient.cave_ambient == null || NoAmbient.canyon_ambient)
+                if(NoAmbient.forest_ambient == null || NoAmbient.cave_ambient == null || NoAmbient.canyon_ambient == null)
                 {
                     NoAmbient.Log("Missing audio source (-s)!");
                     return;
                 }
 
-                NoAmbient.forest_ambient.SetActive(NoAmbient.m_hCfgForest.Value);
-                NoAmbient.cave_ambient.SetActive(NoAmbient.m_hCfgCave.Value);
-                NoAmbient.canyon_ambient.SetActive(NoAmbient.m_hCfgCanyon.Value);
+                if (NoAmbient.forest_ambient != null) NoAmbient.forest_ambient.SetActive(NoAmbient.m_hCfgForest.Value);
+                if (NoAmbient.cave_ambient != null) NoAmbient.cave_ambient.SetActive(NoAmbient.m_hCfgCave.Value);
+                if (NoAmbient.canyon_ambient != null) NoAmbient.canyon_ambient.SetActive(NoAmbient.m_hCfgCanyon.Value);
             }
             catch(Exception e)
             {
@@ -53,13 +53,14 @@ namespace NoAmbientMod
     }
 
     /* That's me! */
-    [BepInPlugin("net.rusjj.noambient", "No Ambient Sounds", "1.0.0")]
+    [BepInPlugin("net.rusjj.noambient", "No Ambient Sounds", "1.0.1")]
 
     public class NoAmbient : BaseUnityPlugin
     {
         internal static UnityEngine.GameObject forest_ambient = null;
         internal static UnityEngine.GameObject cave_ambient = null;
         internal static UnityEngine.GameObject canyon_ambient = null;
+        internal static ConfigFile m_hCfg;
         internal static ConfigEntry<bool> m_hCfgForest;
         internal static ConfigEntry<bool> m_hCfgCave;
         internal static ConfigEntry<bool> m_hCfgCanyon;
@@ -111,10 +112,14 @@ namespace NoAmbientMod
             m_hInstance = this;
             Patcher.Patch.Apply();
 
-            var hCfgFile = new ConfigFile(Path.Combine(Paths.ConfigPath, "NoAmbient.cfg"), true);
-            m_hCfgForest = hCfgFile.Bind("CFG", "Forest", true, "Forest ambient?");
-            m_hCfgCave = hCfgFile.Bind("CFG", "Cave", true, "Cave ambient?");
-            m_hCfgCanyon = hCfgFile.Bind("CFG", "Canyon", true, "Canyon ambient?");
+            m_hCfg = new ConfigFile(Path.Combine(Paths.ConfigPath, "NoAmbient.cfg"), true);
+            m_hCfgForest = m_hCfg.Bind("CFG", "Forest", true, "Forest ambient?");
+            m_hCfgCave = m_hCfg.Bind("CFG", "Cave", true, "Cave ambient?");
+            m_hCfgCanyon = m_hCfg.Bind("CFG", "Canyon", true, "Canyon ambient?");
         }
+        //void OnApplicationQuit()
+        //{
+        //    m_hCfg.Save();
+        //}
     }
 }
