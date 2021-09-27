@@ -36,7 +36,7 @@ namespace NoAmbient_Computer
         {
             _selectionHandler = new UISelectionHandler(EKeyboardKey.Up, EKeyboardKey.Down, EKeyboardKey.Enter);
             _selectionHandler.OnSelected += OnOptionSelected;
-            _selectionHandler.MaxIdx = 2;
+            _selectionHandler.MaxIdx = 3;
         }
         public override void OnShow(object[] args)
         {
@@ -58,6 +58,10 @@ namespace NoAmbient_Computer
                 case 2:
                     NoAmbient.SetActiveCanyon(!NoAmbient.IsActiveCanyon());
                     break;
+
+                case 3:
+                    NoAmbient.SetActiveCityRain(!NoAmbient.IsActiveCityRain());
+                    break;
             }
             Redraw();
         }
@@ -76,7 +80,11 @@ namespace NoAmbient_Computer
 
             sb.Append(NoAmbient.IsActiveCanyon() ? "<color=#2ca600>" : "<color=#ff3700>");
             sb.Append(_selectionHandler.CurrentSelectionIndex == 2 ? "> " : "  ");
-            sb.Append("Canyon Ambient");
+            sb.Append("Canyon Ambient").AppendLine();
+
+            sb.Append(NoAmbient.IsActiveCityRain() ? "<color=#2ca600>" : "<color=#ff3700>");
+            sb.Append(_selectionHandler.CurrentSelectionIndex == 3 ? "> " : "  ");
+            sb.Append("City Rain Ambient");
 
             Text = sb.ToString();
         }
